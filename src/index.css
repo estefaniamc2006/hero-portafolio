@@ -8,6 +8,7 @@ body,
 
 body {
   background: #020617;
+  font-family: 'Poppins', system-ui, sans-serif;
 }
 
 /* Ocultar la barra de desplazamiento sin romper el scroll */
