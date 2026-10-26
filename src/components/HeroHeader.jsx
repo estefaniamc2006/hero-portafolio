@@ -5,6 +5,8 @@ import Avatar from './Avatar.jsx'
 import FloatingShapes from './FloatingShapes.jsx'
 import { profile } from '../data/profile.js'
 
+const ACCENT = '#d4ff3a'
+
 const NAV_LINKS = [
   { label: 'Inicio', href: '#inicio' },
   { label: 'Sobre mí', href: '#sobre-mi' },
@@ -21,7 +23,7 @@ function Scene({ active, hovered, onToggle, onHover }) {
       <pointLight
         position={[-3, 2, 2]}
         intensity={active ? 6 : 3}
-        color={active ? '#f472b6' : '#a78bfa'}
+        color={active ? '#f472b6' : ACCENT}
         distance={10}
       />
       <spotLight position={[0, 5, 2]} angle={0.4} penumbra={0.6} intensity={0.8} />
@@ -55,30 +57,29 @@ export default function HeroHeader() {
   const [hovered, setHovered] = useState(false)
   const year = new Date().getFullYear()
 
+  const infoCards = [
+    {
+      label: 'Formación',
+      value: profile.education.program,
+      sub: `${profile.education.school} · ${profile.education.semester}`,
+    },
+    { label: 'Me gusta', value: 'Diseñar interfaces', sub: 'UI/UX y experiencias 3D' },
+    { label: 'Tiempo libre', value: 'Videojuegos', sub: 'Jugar y descubrir mecánicas' },
+  ]
+
   return (
     <header
       id="inicio"
-      className="relative h-screen min-h-[640px] w-full overflow-hidden text-white"
-      style={{
-        background:
-          'radial-gradient(ellipse at 50% 45%, #9333ea 0%, #5b21b6 30%, #2e1065 60%, #0c0319 100%)',
-      }}
+      className="relative h-screen min-h-[720px] w-full overflow-hidden bg-[#0b0712] text-white"
     >
-      {/* Manchas de color difuminadas para dar profundidad */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-32 top-16 h-96 w-96 rounded-full bg-fuchsia-500/30 blur-3xl" />
-        <div className="absolute right-0 top-1/4 h-[28rem] w-[28rem] rounded-full bg-violet-400/30 blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 h-72 w-72 rounded-full bg-amber-300/20 blur-3xl" />
+      {/* Fondo con degradado y manchas de color */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[#3b0a63] via-[#160828] to-[#050309]" />
+        <div className="absolute -right-40 top-0 h-[36rem] w-[36rem] rounded-full bg-fuchsia-600/30 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 h-72 w-72 rounded-full bg-violet-500/30 blur-3xl" />
       </div>
 
-      {/* Nombre gigante detrás del objeto 3D */}
-      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-[1] -translate-y-1/2 select-none text-center">
-        <h2 className="bg-gradient-to-b from-pink-50 to-pink-200/30 bg-clip-text text-[20vw] font-extrabold leading-none tracking-tight text-transparent md:text-[17vw]">
-          {profile.name.toUpperCase()}
-        </h2>
-      </div>
-
-      {/* Canvas 3D (transparente, muestra el fondo) */}
+      {/* Canvas 3D (fondo transparente) */}
       <div className="absolute inset-0 z-[2]">
         <Canvas shadows dpr={[1, 2]} camera={{ position: [0, 0.6, 4.2], fov: 40 }} gl={{ antialias: true }}>
           <Scene
@@ -90,81 +91,95 @@ export default function HeroHeader() {
         </Canvas>
       </div>
 
-      {/* Capa HTML superpuesta */}
-      <div className="pointer-events-none relative z-[3] flex h-full flex-col justify-between px-6 py-8 md:px-14">
+      {/* Capa HTML: nav arriba, bloque central, tarjetas abajo */}
+      <div className="pointer-events-none relative z-[4] flex h-full flex-col px-6 py-8 md:px-14">
         {/* Navegación */}
         <nav className="pointer-events-auto flex items-center justify-between">
-          <ul className="hidden gap-8 text-sm font-medium tracking-wide text-white/90 md:flex">
+          <span className="text-xl font-black italic tracking-tight">
+            {profile.name.toUpperCase()}
+            <span style={{ color: ACCENT }}>*</span>
+          </span>
+
+          <ul className="hidden gap-8 text-xs font-semibold tracking-[0.2em] text-white/80 md:flex">
             {NAV_LINKS.map((link) => (
               <li key={link.label}>
-                <a href={link.href} className="transition hover:text-pink-200">
-                  {link.label}
+                <a href={link.href} className="transition hover:text-white">
+                  {link.label.toUpperCase()}
                 </a>
               </li>
             ))}
           </ul>
-          <span className="text-lg font-bold tracking-tight md:hidden">{profile.name}</span>
 
-          <div className="flex items-center gap-1 rounded-full border border-white/20 bg-white/5 p-1 text-sm backdrop-blur-md">
-            <a href={profile.ctaHref} className="rounded-full bg-pink-100 px-5 py-2 font-medium text-purple-950">
-              {profile.ctaLabel}
-            </a>
-            <a href="#contacto" className="rounded-full px-5 py-2 text-white/90 transition hover:text-pink-200">
-              Contacto
-            </a>
-          </div>
+          <a
+            href="#contacto"
+            className="rounded-full px-5 py-2 text-xs font-bold text-black transition hover:scale-105"
+            style={{ backgroundColor: ACCENT }}
+          >
+            CONTACTAR
+          </a>
         </nav>
 
-        {/* Año vertical a la izquierda */}
-        <div className="pointer-events-none absolute left-6 top-1/2 hidden -translate-y-1/2 md:left-10 md:block">
-          <span className="block -rotate-90 text-sm tracking-[0.3em] text-white/80">{year}</span>
-        </div>
+        {/* Bloque central: título, texto y botones en flujo normal (sin encimarse) */}
+        <div className="flex flex-1 flex-col justify-center">
+          <p className="text-xs tracking-[0.3em] text-white/60">
+            {profile.fullName.toUpperCase()} · {profile.location.toUpperCase()} · {year}
+          </p>
 
-        {/* Redes verticales a la derecha */}
-        <ul className="pointer-events-auto absolute right-6 top-1/2 hidden -translate-y-1/2 flex-col gap-5 text-xs tracking-wide text-white/80 md:right-10 md:flex">
-          {profile.socials.map((s) => (
-            <li key={s.label}>
-              <a href={s.href} target="_blank" rel="noreferrer" className="transition hover:text-pink-200">
-                {s.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+          <h1 className="mt-4 text-[16vw] font-black italic leading-[0.9] tracking-tight md:text-[7.5vw]">
+            <span className="block text-white">DISEÑO</span>
+            <span className="block" style={{ color: ACCENT }}>
+              &amp; JUEGO
+            </span>
+          </h1>
 
-        {/* Texto inferior izquierdo */}
-        <div className="pointer-events-auto absolute bottom-10 left-6 max-w-xs md:left-14">
-          <div className="mb-3 flex items-center gap-3 text-sm font-medium tracking-[0.2em]">
-            <span className="h-1.5 w-1.5 rounded-full bg-white" />
-            SOBRE MÍ
+          <p className="mt-6 max-w-md text-lg leading-snug text-white/80">{profile.tagline}</p>
+
+          <div className="pointer-events-auto mt-6 flex flex-wrap items-center gap-4">
+            <a
+              href={profile.ctaHref}
+              className="rounded-full px-6 py-3 text-sm font-bold text-black transition hover:-translate-y-0.5"
+              style={{ backgroundColor: ACCENT }}
+            >
+              {profile.ctaLabel}
+            </a>
+            <button
+              type="button"
+              onClick={() => setActive((v) => !v)}
+              aria-pressed={active}
+              className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition hover:border-white"
+            >
+              {active ? 'Modo calma' : 'Modo energía'}
+            </button>
           </div>
-          <p className="text-lg leading-snug text-pink-100/75">{profile.tagline}</p>
-          <p className="mt-2 text-sm text-pink-100/50">{profile.title}</p>
         </div>
 
-        {/* Botón de llamado a la acción (inferior derecho) */}
-        <a
-          href={profile.ctaHref}
-          className="pointer-events-auto absolute bottom-28 right-6 flex items-center gap-3 rounded-lg bg-white/20 px-5 py-3 text-sm font-medium backdrop-blur-md transition hover:bg-white/30 md:right-14"
-        >
-          {profile.ctaLabel}
-          <span className="grid h-7 w-7 place-items-center rounded-full bg-fuchsia-600 text-[10px]">▶</span>
-        </a>
-
-        {/* Botón circular: modo energía */}
-        <button
-          type="button"
-          onClick={() => setActive((v) => !v)}
-          aria-pressed={active}
-          aria-label="Cambiar modo energía"
-          className="pointer-events-auto absolute bottom-8 right-6 grid h-14 w-14 place-items-center rounded-full border border-white/20 bg-white/15 text-xl shadow-lg backdrop-blur-md transition hover:scale-105 md:right-14"
-        >
-          {active ? '◐' : '✦'}
-        </button>
-
-        <p className="pointer-events-none absolute bottom-4 left-1/2 hidden -translate-x-1/2 text-xs text-white/40 md:block">
-          Arrastra para girar · Clic en el avatar para cambiar la energía
-        </p>
+        {/* Tarjetas de información */}
+        <div className="pointer-events-auto grid gap-4 sm:grid-cols-3">
+          {infoCards.map((card) => (
+            <div
+              key={card.label}
+              className="rounded-2xl border border-white/15 bg-white/5 p-4 backdrop-blur-md transition hover:border-white/40"
+            >
+              <p className="text-[10px] font-bold tracking-[0.25em]" style={{ color: ACCENT }}>
+                {card.label.toUpperCase()}
+              </p>
+              <p className="mt-2 text-sm font-semibold">{card.value}</p>
+              <p className="mt-1 text-xs text-white/60">{card.sub}</p>
+            </div>
+          ))}
+        </div>
       </div>
+
+      {/* Redes verticales a la derecha */}
+      <ul className="pointer-events-auto absolute right-6 top-1/2 z-[4] hidden -translate-y-1/2 flex-col gap-4 text-xs tracking-wide text-white/70 md:right-10 md:flex">
+        {profile.socials.map((s) => (
+          <li key={s.label}>
+            <a href={s.href} target="_blank" rel="noreferrer" className="transition hover:text-white">
+              {s.label}
+            </a>
+          </li>
+        ))}
+      </ul>
     </header>
   )
 }

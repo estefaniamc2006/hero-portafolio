@@ -1,13 +1,31 @@
 // Datos del portafolio: edita aquí tu información personal.
 export const profile = {
   name: 'Tefa',
-  title: 'Desarrolladora Frontend · UI/UX',
-  tagline: 'Construyo interfaces web con diseño cuidado, interacción y movimiento.',
+  fullName: 'Estefania Martínez Calvachi',
+  title: 'Estudiante de Ingeniería de Sistemas',
+  tagline:
+    'Me gusta diseñar interfaces, programar experiencias interactivas y, en mi tiempo libre, jugar videojuegos.',
+  location: 'Cali, Colombia',
   ctaLabel: 'Ver Proyectos',
   ctaHref: '#proyectos',
+  education: {
+    school: 'Universidad San Buenaventura Cali',
+    program: 'Ingeniería de Sistemas',
+    semester: 'Sexto semestre',
+  },
+  interests: ['Diseño de interfaces (UI/UX)', 'Videojuegos', 'Experiencias web en 3D'],
+  skills: ['React', 'Vite', 'Tailwind CSS', 'Three.js / R3F', 'JavaScript', 'Figma'],
   socials: [
-    { label: 'GitHub', href: 'https://github.com/estefaniamc2006' },
-    { label: 'Email', href: 'mailto:estefaniamc2006@gmail.com' },
+    {
+      label: 'GitHub',
+      href: 'https://github.com/estefaniamc2006',
+      display: 'github.com/estefaniamc2006',
+    },
+    {
+      label: 'Email',
+      href: 'mailto:estefaniamc2006@gmail.com',
+      display: 'estefaniamc2006@gmail.com',
+    },
   ],
 }
 
